@@ -37,20 +37,18 @@ static uint16 sprite_get_first_in_quadrant(int x, int y)
 
 static void invalidate_sprite_max_zoom(rct_sprite *sprite, int maxZoom)
 {
-	if (sprite->unknown.sprite_left == SPRITE_LOCATION_NULL) return;
+	if (sprite->unknown.sprite_left == SPRITE_LOCATION_NULL)
+		return;
 
-	for (rct_viewport** viewport_p = RCT2_ADDRESS(RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY, rct_viewport*); *viewport_p != NULL; viewport_p++) {
-		rct_viewport* viewport = *viewport_p;
-		if (viewport->zoom <= maxZoom) {
-			viewport_invalidate(
-				viewport,
-				sprite->unknown.sprite_left,
-				sprite->unknown.sprite_top,
-				sprite->unknown.sprite_right,
-				sprite->unknown.sprite_bottom
-			);
-		}
-	}
+	int left   = sprite->unknown.sprite_left;
+	int top    = sprite->unknown.sprite_top;
+	int right  = sprite->unknown.sprite_right;
+	int bottom = sprite->unknown.sprite_bottom;
+
+	rct_viewport* viewport;
+	FOR_ALL_VIEWPORTS(viewport)
+		if (viewport->zoom <= maxZoom)
+			viewport_invalidate(viewport, left, top, right, bottom);
 }
 
 /**

@@ -25,6 +25,8 @@
 #include "../world/sprite.h"
 #include "window.h"
 
+#define FOR_ALL_VIEWPORTS(viewport) for (viewport = g_viewport_list; viewport < g_viewport_list_end && viewport->width != 0; viewport++)
+
 enum {
 	VIEWPORT_FLAG_UNDERGROUND_INSIDE = (1 << 0),
 	VIEWPORT_FLAG_SEETHROUGH_RIDES = (1 << 1),
@@ -90,6 +92,7 @@ typedef struct {
 
 // rct2: 0x014234BC
 extern rct_viewport* g_viewport_list;
+extern rct_viewport* g_viewport_list_end;
 
 void viewport_init_all();
 void center_2d_coordinates(int x, int y, int z, int* out_x, int* out_y, rct_viewport* viewport);

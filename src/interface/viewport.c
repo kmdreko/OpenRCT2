@@ -36,12 +36,10 @@
 #include "viewport.h"
 #include "window.h"
 
-#define RCT2_FIRST_VIEWPORT		(RCT2_ADDRESS(RCT2_ADDRESS_VIEWPORT_LIST, rct_viewport))
-#define RCT2_LAST_VIEWPORT		(RCT2_ADDRESS(RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY, rct_viewport) - 1)
-
 //#define DEBUG_SHOW_DIRTY_BOX
 
-rct_viewport* g_viewport_list = RCT2_ADDRESS(RCT2_ADDRESS_VIEWPORT_LIST, rct_viewport);
+rct_viewport* g_viewport_list     = RCT2_ADDRESS(RCT2_ADDRESS_VIEWPORT_LIST, rct_viewport);
+rct_viewport* g_viewport_list_end = RCT2_ADDRESS(RCT2_ADDRESS_VIEWPORT_LIST + 9 * sizeof(rct_viewport), rct_viewport);
 
 typedef struct paint_struct paint_struct;
 
@@ -97,7 +95,6 @@ void viewport_init_all()
 	for (int i = 0; i < 9; i++) {
 		g_viewport_list[i].width = 0;
 	}
-	RCT2_GLOBAL(RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY, rct_viewport*) = NULL;
 
 	// ?
 	RCT2_GLOBAL(RCT2_ADDRESS_INPUT_FLAGS, sint32) = 0;
@@ -165,11 +162,12 @@ void center_2d_coordinates(int x, int y, int z, int* out_x, int* out_y, rct_view
 void viewport_create(rct_window *w, int x, int y, int width, int height, int zoom, int center_x, int center_y, int center_z, char flags, sint16 sprite)
 {
 	rct_viewport* viewport;
-	for (viewport = g_viewport_list; viewport->width != 0; viewport++){
-		if (viewport > RCT2_LAST_VIEWPORT){
-			error_string_quit(0xFF000001, -1);
-		}
-	}
+
+	// viewport = next available
+	FOR_ALL_VIEWPORTS(viewport) { }
+
+	if (viewport >= g_viewport_list_end)
+		error_string_quit(0xFF000001, -1);
 
 	viewport->x = x;
 	viewport->y = y;
@@ -217,15 +215,9 @@ void viewport_create(rct_window *w, int x, int y, int width, int height, int zoo
  */
 void viewport_update_pointers()
 {
-	rct_viewport *viewport;
-	rct_viewport **vp = RCT2_ADDRESS(RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY, rct_viewport*);
-
-	// The last possible viewport entry is 1 before what is the active viewport_ptr_array
-	for (viewport = g_viewport_list; viewport <= RCT2_LAST_VIEWPORT; viewport++)
-		if (viewport->width != 0)
-			*vp++ = viewport;
-
-	*vp = NULL;
+	// This function is obsolete; RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY is no
+	// longer used
+	return;
 }
 
 /**
