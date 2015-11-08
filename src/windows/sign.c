@@ -349,11 +349,10 @@ static void window_sign_paint(rct_window *w, rct_drawpixelinfo *dpi)
 /* rct2: 0x6B9A6C & 0x6E6424 */
 static void window_sign_unknown_14(rct_window *w)
 {
-	rct_viewport* view = w->viewport;
-	w->viewport = 0;
-
-	view->width = 0;
-	viewport_update_pointers();
+	// Remove old viewport
+	if (w->viewport != NULL)
+		viewport_remove(w->viewport);
+	w->viewport = NULL;
 
 	rct_banner* banner = &gBanners[w->number];
 

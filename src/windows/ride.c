@@ -1543,10 +1543,9 @@ static void window_ride_init_viewport(rct_window *w)
 			focus.coordinate.zoom == w->viewport_focus_coordinates.zoom )
 			return;
 		viewport_flags = w->viewport->flags;
-		w->viewport->width = 0;
-		w->viewport = 0;
 
-		viewport_update_pointers();
+		viewport_remove(w->viewport);
+		w->viewport = NULL;
 	}
 	else{
 		if (RCT2_GLOBAL(RCT2_ADDRESS_CONFIG_FLAGS, uint8) & 0x1)

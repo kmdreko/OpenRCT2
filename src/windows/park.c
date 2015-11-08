@@ -1079,11 +1079,10 @@ static void window_park_init_viewport(rct_window *w)
 		// if (w->var_482 == x && w->var_484 == y && w->var_486 == z && (uint16)w->var_488 >> 8 == r)
 		//	return;
 
-		viewport = w->viewport;
+		viewportFlags = w->viewport->flags;
+
+		viewport_remove(w->viewport);
 		w->viewport = NULL;
-		viewportFlags = viewport->flags;
-		viewport->width = 0;
-		viewport_update_pointers();
 	}
 
 	// Call invalidate event

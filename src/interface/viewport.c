@@ -205,19 +205,18 @@ void viewport_create(rct_window *w, int x, int y, int width, int height, int zoo
 	w->saved_view_y = view_y;
 	viewport->view_x = view_x;
 	viewport->view_y = view_y;
-
-	viewport_update_pointers();
 }
 
-/**
- *
- *  rct2: 0x006EE510
+/*
+ * removes a viewport from the list
  */
-void viewport_update_pointers()
+void viewport_remove(rct_viewport* viewport)
 {
-	// This function is obsolete; RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY is no
-	// longer used
-	return;
+	// assert(viewport >= g_viewport_list);
+	// assert(viewport <  g_viewport_list_end);
+
+	// mark the viewport as unused
+	viewport->width = 0;
 }
 
 /**

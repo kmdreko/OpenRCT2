@@ -665,10 +665,8 @@ void window_close(rct_window* window)
 		return;
 
 	// Remove viewport
-	if (window->viewport != NULL) {
-		window->viewport->width = 0;
-		window->viewport = NULL;
-	}
+	if (window->viewport != NULL)
+		viewport_remove(window->viewport);
 
 	// Invalidate the window (area)
 	window_invalidate(window);
@@ -678,8 +676,6 @@ void window_close(rct_window* window)
 	num_windows = (RCT2_NEW_WINDOW - window);
 	if (num_windows > 0)
 		memmove(window, window + 1, num_windows * sizeof(rct_window));
-
-	viewport_update_pointers();
 }
 
 /**
