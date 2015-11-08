@@ -164,7 +164,9 @@ void viewport_create(rct_window *w, int x, int y, int width, int height, int zoo
 	rct_viewport* viewport;
 
 	// viewport = next available
-	FOR_ALL_VIEWPORTS(viewport) { }
+	FOR_ALL_VIEWPORTS(viewport)
+		if (viewport->width == 0)
+			break;
 
 	if (viewport >= g_viewport_list_end)
 		error_string_quit(0xFF000001, -1);

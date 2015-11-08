@@ -25,7 +25,8 @@
 #include "../world/sprite.h"
 #include "window.h"
 
-#define FOR_ALL_VIEWPORTS(viewport) for (viewport = g_viewport_list; viewport < g_viewport_list_end && viewport->width != 0; viewport++)
+#define FOR_ALL_VIEWPORTS(viewport) for (viewport = g_viewport_list; viewport < g_viewport_list_end; viewport++)
+#define FOR_ALL_ACTIVE_VIEWPORTS(viewport) FOR_ALL_VIEWPORTS(viewport) if (viewport->width != 0)
 
 enum {
 	VIEWPORT_FLAG_UNDERGROUND_INSIDE = (1 << 0),
