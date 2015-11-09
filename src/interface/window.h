@@ -334,7 +334,7 @@ typedef enum {
 	WF_SCROLLING_TO_LOCATION = (1 << 3),
 	WF_TRANSPARENT = (1 << 4),
 	WF_NO_BACKGROUND = (1 << 5), // Instead of half transparency, completely remove the window background
-	WF_7 = (1 << 7),
+	WF_ALWAYS_REDRAW = (1 << 7),
 	WF_RESIZABLE = (1 << 8),
 	WF_NO_AUTO_CLOSE = (1 << 9), // Don't auto close this window if too many windows are open
 	WF_10 = (1 << 10),

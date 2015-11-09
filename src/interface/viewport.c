@@ -463,9 +463,47 @@ void viewport_draw_under_transparent_windows(rct_window* w, rct_viewport* viewpo
 	}
 }
 
-void sub_6E7DE1(sint16 x, sint16 y, rct_window* w, rct_viewport* viewport){
+/*
+ * modifies the viewport to be only within screen dimensions. (will have
+ * negative width/height if off screen)
+ */
+void viewport_clip_to_screen(rct_viewport* viewport)
+{
 	uint8 zoom = (1 << viewport->zoom);
 
+	if (viewport->x < 0) {
+		viewport->width += viewport->x;
+		viewport->view_width += viewport->x * zoom;
+		viewport->view_x -= viewport->x * zoom;
+		viewport->x = 0;
+	}
+
+	int eax = viewport->x + viewport->width - RCT2_GLOBAL(RCT2_ADDRESS_SCREEN_WIDTH, uint16);
+	if (eax > 0) {
+		viewport->width -= eax;
+		viewport->view_width -= eax * zoom;
+	}
+
+	if (viewport->y < 0) {
+		viewport->height += viewport->y;
+		viewport->view_height += viewport->y * zoom;
+		viewport->view_y -= viewport->y * zoom;
+		viewport->y = 0;
+	}
+
+	eax = viewport->y + viewport->height - RCT2_GLOBAL(RCT2_ADDRESS_SCREEN_HEIGHT, uint16);
+	if (eax > 0) {
+		viewport->height -= eax;
+		viewport->view_height -= eax * zoom;
+	}
+}
+
+/*
+ * moves viewport to x, y
+ * rct2: 0x006E7DE1
+ */
+void viewport_move(sint16 x, sint16 y, rct_window* window, rct_viewport* viewport)
+{
 	// Note: do not do the subtraction and then divide!
 	// Note: Due to arithmatic shift != /zoom a shift will have to be used
 	// hopefully when 0x006E7FF3 is finished this can be converted to /zoom.
@@ -476,63 +514,26 @@ void sub_6E7DE1(sint16 x, sint16 y, rct_window* w, rct_viewport* viewport){
 	viewport->view_y = y;
 
 	// If no change in viewing area
-	if ((!x_diff) && (!y_diff))return;
-
-	if (w->flags & WF_7){
-		int left = max(viewport->x, 0);
-		int top = max(viewport->y, 0);
-		int right = min(viewport->x + viewport->width, RCT2_GLOBAL(RCT2_ADDRESS_SCREEN_WIDTH, uint16));
-		int bottom = min(viewport->y + viewport->height, RCT2_GLOBAL(RCT2_ADDRESS_SCREEN_HEIGHT, uint16));
-
-		if (left >= right) return;
-		if (top >= bottom) return;
-
-		gfx_redraw_screen_rect(left, top, right, bottom);
+	if (x_diff == 0 && y_diff == 0)
 		return;
-	}
 
+	// save viewport
 	rct_viewport view_copy;
 	memcpy(&view_copy, viewport, sizeof(rct_viewport));
 
-	if (viewport->x < 0){
-		viewport->width += viewport->x;
-		viewport->view_width += viewport->x * zoom;
-		viewport->view_x -= viewport->x * zoom;
-		viewport->x = 0;
+	// check if on screen
+	viewport_clip_to_screen(viewport);
+	if (viewport->width > 0 && viewport->height > 0)
+	{
+		if (window->flags & WF_ALWAYS_REDRAW) {
+			gfx_redraw_screen_rect(viewport->x, viewport->y, viewport->x + viewport->width, viewport->y + viewport->height);
+		} else {
+			viewport_draw_under_transparent_windows(window, viewport);
+			viewport_move_around_windows(window, viewport, x_diff, y_diff);
+		}
 	}
 
-	int eax = viewport->x + viewport->width - RCT2_GLOBAL(RCT2_ADDRESS_SCREEN_WIDTH, uint16);
-	if (eax > 0){
-		viewport->width -= eax;
-		viewport->view_width -= eax * zoom;
-	}
-
-	if (viewport->width <= 0){
-		memcpy(viewport, &view_copy, sizeof(rct_viewport));
-		return;
-	}
-
-	if (viewport->y < 0){
-		viewport->height += viewport->y;
-		viewport->view_height += viewport->y * zoom;
-		viewport->view_y -= viewport->y * zoom;
-		viewport->y = 0;
-	}
-
-	eax = viewport->y + viewport->height - RCT2_GLOBAL(RCT2_ADDRESS_SCREEN_HEIGHT, uint16);
-	if (eax > 0){
-		viewport->height -= eax;
-		viewport->view_height -= eax * zoom;
-	}
-
-	if (viewport->height <= 0){
-		memcpy(viewport, &view_copy, sizeof(rct_viewport));
-		return;
-	}
-
-	viewport_draw_under_transparent_windows(w, viewport);
-	viewport_move_around_windows(w, viewport, x_diff, y_diff);
-
+	// restore viewport
 	memcpy(viewport, &view_copy, sizeof(rct_viewport));
 }
 
@@ -659,7 +660,7 @@ void viewport_update_position(rct_window *window)
 		y += viewport->view_y;
 	}
 
-	sub_6E7DE1(x, y, window, viewport);
+	viewport_move(x, y, window, viewport);
 }
 
 void viewport_update_sprite_follow(rct_window *window)
@@ -675,7 +676,7 @@ void viewport_update_sprite_follow(rct_window *window)
 		int center_x, center_y;
 		center_2d_coordinates(sprite->unknown.x, sprite->unknown.y, sprite->unknown.z, &center_x, &center_y, window->viewport);
 
-		sub_6E7DE1(center_x, center_y, window, window->viewport);
+		viewport_move(center_x, center_y, window, window->viewport);
 	}
 }
 
