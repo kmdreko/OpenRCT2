@@ -434,39 +434,33 @@ void viewport_move_around_windows(rct_window *window, rct_viewport *viewport, in
 	memcpy(viewport, &view_copy, sizeof(rct_viewport));
 }
 
-void sub_6E7F34(rct_window* w, rct_viewport* viewport, sint16 x_diff, sint16 y_diff){
-	rct_window* orignal_w = w;
-	int left = 0, right = 0, top = 0, bottom = 0;
+/*
+ * redraws viewport area under transparent windows
+ *
+ * rct2: 0x006E7F34
+ */
+void viewport_draw_under_transparent_windows(rct_window* w, rct_viewport* viewport)
+{
+	for (rct_window* window = w; window < RCT2_GLOBAL(RCT2_ADDRESS_NEW_WINDOW_PTR, rct_window*); window++)
+	{
+		// skip current window and solid windows
+		if (viewport == window->viewport || !(window->flags & WF_TRANSPARENT))
+			continue;
 
-	for (; w < RCT2_GLOBAL(RCT2_ADDRESS_NEW_WINDOW_PTR, rct_window*); w++){
-		if (!(w->flags & WF_TRANSPARENT)) continue;
-		if (w->viewport == viewport) continue;
+		// skip non-intersecting windows
+		if (viewport->x + viewport->width  <= window->x                 ||
+			viewport->x                    >= window->x + window->width ||
+			viewport->y + viewport->height <= window->y                 ||
+			viewport->y                    >= window->y + window->height) 
+			continue;
 
-		if (viewport->x + viewport->width <= w->x)continue;
-		if (w->x + w->width <= viewport->x) continue;
-
-		if (viewport->y + viewport->height <= w->y)continue;
-		if (w->y + w->height <= viewport->y) continue;
-
-		left = w->x;
-		right = w->x + w->width;
-		top = w->y;
-		bottom = w->y + w->height;
-
-		if (left < viewport->x)left = viewport->x;
-		if (right > viewport->x + viewport->width) right = viewport->x + viewport->width;
-
-		if (top < viewport->y)top = viewport->y;
-		if (bottom > viewport->y + viewport->height) bottom = viewport->y + viewport->height;
-
-		if (left >= right) continue;
-		if (top >= bottom) continue;
+		int left   = max(viewport->x, window->x);
+		int top    = max(viewport->y, window->y);
+		int right  = min(viewport->x + viewport->width,  window->x + window->width);
+		int bottom = min(viewport->y + viewport->height, window->y + window->height);
 
 		gfx_redraw_screen_rect(left, top, right, bottom);
 	}
-
-	w = orignal_w;
-	viewport_move_around_windows(w, viewport, x_diff, y_diff);
 }
 
 void sub_6E7DE1(sint16 x, sint16 y, rct_window* w, rct_viewport* viewport){
@@ -536,7 +530,8 @@ void sub_6E7DE1(sint16 x, sint16 y, rct_window* w, rct_viewport* viewport){
 		return;
 	}
 
-	sub_6E7F34(w, viewport, x_diff, y_diff);
+	viewport_draw_under_transparent_windows(w, viewport);
+	viewport_move_around_windows(w, viewport, x_diff, y_diff);
 
 	memcpy(viewport, &view_copy, sizeof(rct_viewport));
 }
