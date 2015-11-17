@@ -44,44 +44,44 @@ rct_viewport* g_viewport_list_end = RCT2_ADDRESS(RCT2_ADDRESS_VIEWPORT_LIST + 9 
 typedef struct paint_struct paint_struct;
 
 struct paint_struct{
-	uint32 image_id;		// 0x00
+	uint32 image_id;		                // 0x00
 	uint32 var_04;
-	uint16 attached_x;		// 0x08
-	uint16 attached_y;		// 0x0A
+	uint16 attached_x;		                // 0x08
+	uint16 attached_y;		                // 0x0A
 	union {
 		struct {
 			uint8 var_0C;
 			uint8 pad_0D;
-			paint_struct* next_attached_ps;	//0x0E
+			paint_struct* next_attached_ps;	// 0x0E
 			uint16 pad_12;
 		};
 		struct {
-			uint16 some_x; // 0x0C
-			uint16 some_y; // 0x0E
-			uint16 other_x; // 0x10
-			uint16 other_y; // 0x12
+			uint16 some_x;                  // 0x0C
+			uint16 some_y;                  // 0x0E
+			uint16 other_x;                 // 0x10
+			uint16 other_y;                 // 0x12
 		};
 	};
-	uint16 x;				// 0x14
-	uint16 y;				// 0x16
+	uint16 x;				                // 0x14
+	uint16 y;				                // 0x16
 	uint16 var_18;
 	uint8 var_1A;
 	uint8 var_1B;
-	paint_struct* attached_ps;	//0x1C
+	paint_struct* attached_ps;	            // 0x1C
 	paint_struct* var_20;
-	paint_struct* next_quadrant_ps; // 0x24
-	uint8 sprite_type;		//0x28
+	paint_struct* next_quadrant_ps;         // 0x24
+	uint8 sprite_type;		                // 0x28
 	uint8 var_29;
 	uint16 pad_2A;
-	uint16 map_x;			// 0x2C
-	uint16 map_y;			// 0x2E
-	rct_map_element *mapElement; // 0x30 (or sprite pointer)
+	uint16 map_x;                           // 0x2C
+	uint16 map_y;                           // 0x2E
+	rct_map_element *mapElement;            // 0x30 (or sprite pointer)
 };
 
 /**
- *  This is not a viewport function. It is used to setup many variables for
- *  multiple things.
- *  rct2: 0x006E6EAC
+ * This is not a viewport function. It is used to setup many variables for
+ * multiple things.
+ * rct2: 0x006E6EAC
  */
 void viewport_init_all()
 {
@@ -110,13 +110,13 @@ void viewport_init_all()
 }
 
 /**
- *  rct:0x006EB0C1
- *  x : ax
- *  y : bx
- *  z : cx
- *  out_x : ax
- *  out_y : bx
- *  Converts between 3d point of a sprite to 2d coordinates for centering on that sprite
+ * Converts between 3d point of a sprite to 2d coordinates for centering on that sprite
+ * rct:0x006EB0C1
+ * x : ax
+ * y : bx
+ * z : cx
+ * out_x : ax
+ * out_y : bx
  */
 void center_2d_coordinates(int x, int y, int z, int* out_x, int* out_y, rct_viewport* viewport){
 	int start_x = x;
@@ -156,22 +156,20 @@ void viewport_update_pointers()
 }
 
 /**
-*
-*  rct2: 0x006EB009
-*  x:      ax
-*  y:      eax (top 16)
-*  width:  bx
-*  height: ebx (top 16)
-*  zoom:    cl (8 bits)
-*  center_x: edx lower 16 bits
-*  center_y: edx upper 16 bits
-*  center_z: ecx upper 16 bits
-*  sprite: edx lower 16 bits
-*  flags:  edx top most 2 bits 0b_X1 for zoom clear see below for 2nd bit.
-*  w:      esi
-*
-*  Viewport will look at sprite or at coordinates as specified in flags 0b_1X for sprite 0b_0X for coordinates
-*/
+ * Viewport will look at sprite or at coordinates as specified in flags 0b_1X for sprite 0b_0X for coordinates
+ * rct2: 0x006EB009
+ * x:      ax
+ * y:      eax (top 16)
+ * width:  bx
+ * height: ebx (top 16)
+ * zoom:    cl (8 bits)
+ * center_x: edx lower 16 bits
+ * center_y: edx upper 16 bits
+ * center_z: ecx upper 16 bits
+ * sprite: edx lower 16 bits
+ * flags:  edx top most 2 bits 0b_X1 for zoom clear see below for 2nd bit.
+ * w:      esi
+ */
 void viewport_create(rct_window *w, int x, int y, int width, int height, int zoom, int center_x, int center_y, int center_z, char flags, sint16 sprite)
 {
 	rct_viewport* viewport;
@@ -224,8 +222,8 @@ void viewport_create(rct_window *w, int x, int y, int width, int height, int zoo
 	viewport_update_pointers();
 }
 
-/*
- * removes a viewport from the list
+/**
+ * removes a viewport from the global list
  */
 void viewport_remove(rct_viewport* viewport)
 {
@@ -240,7 +238,6 @@ void viewport_remove(rct_viewport* viewport)
 }
 
 /**
- * edx is assumed to be (and always is) the current rotation, so it is not needed as parameter.
  * rct2: 0x00689174
  */
 void sub_689174(sint16* x, sint16* y, sint16 *z)
@@ -274,7 +271,6 @@ void sub_689174(sint16* x, sint16* y, sint16 *z)
 /**
  * shifts pixels from the region in a direction. Used when a viewport moves;
  * consider putting in src/drawing/drawing.c or src/drawing/rect.c
- * 
  * rct2: 0x00683359
  * ax = x
  * bx = y;
@@ -322,7 +318,7 @@ void gfx_move_screen_rect(int x, int y, int width, int height, int dx, int dy)
 		memmove(to, from, width);
 }
 
-/*
+/**
  * shifts the viewport in a direction
  */
 void viewport_move_whole(rct_viewport *viewport, int dx, int dy)
@@ -373,7 +369,7 @@ void viewport_move_whole(rct_viewport *viewport, int dx, int dy)
 	}
 }
 
-/*
+/**
  * sub-divides the viewport into regions around windows and shifts them
  * rct2: 0x006E7FF3
  */
@@ -452,9 +448,8 @@ void viewport_move_around_windows(rct_window *window, rct_viewport *viewport, in
 	memcpy(viewport, &view_copy, sizeof(rct_viewport));
 }
 
-/*
+/**
  * redraws viewport area under transparent windows
- *
  * rct2: 0x006E7F34
  */
 void viewport_draw_under_transparent_windows(rct_window* w, rct_viewport* viewport)
@@ -481,7 +476,7 @@ void viewport_draw_under_transparent_windows(rct_window* w, rct_viewport* viewpo
 	}
 }
 
-/*
+/**
  * modifies the viewport to be only within screen dimensions. (will have
  * negative width/height if off screen)
  */
@@ -516,8 +511,9 @@ void viewport_clip_to_screen(rct_viewport* viewport)
 	}
 }
 
-/*
+/**
  * moves viewport to x, y
+ * 
  * rct2: 0x006E7DE1
  */
 void viewport_move(sint16 x, sint16 y, rct_window* window, rct_viewport* viewport)
