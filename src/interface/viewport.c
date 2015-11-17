@@ -142,6 +142,19 @@ void center_2d_coordinates(int x, int y, int z, int* out_x, int* out_y, rct_view
 	*out_y = coord_2d.y - viewport->view_height / 2;
 }
 
+void viewport_update_pointers()
+{
+	rct_viewport *viewport;
+	rct_viewport **vp = RCT2_ADDRESS(RCT2_ADDRESS_ACTIVE_VIEWPORT_PTR_ARRAY, rct_viewport*);
+
+	// The last possible viewport entry is 1 before what is the active viewport_ptr_array
+	for (viewport = g_viewport_list; viewport <= g_viewport_list_end; viewport++)
+		if (viewport->width != 0)
+			*vp++ = viewport;
+
+	*vp = NULL;
+}
+
 /**
 *
 *  rct2: 0x006EB009
@@ -207,6 +220,8 @@ void viewport_create(rct_window *w, int x, int y, int width, int height, int zoo
 	w->saved_view_y = view_y;
 	viewport->view_x = view_x;
 	viewport->view_y = view_y;
+
+	viewport_update_pointers();
 }
 
 /*
@@ -219,6 +234,9 @@ void viewport_remove(rct_viewport* viewport)
 
 	// mark the viewport as unused
 	viewport->width = 0;
+
+	// update pointers
+	viewport_update_pointers();
 }
 
 /**
