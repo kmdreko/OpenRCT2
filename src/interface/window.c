@@ -1432,6 +1432,10 @@ void window_zoom_set(rct_window *w, int zoomLevel)
 		v->view_height *= 2;
 	}
 
+	// prevents viewport from re-calculating position when zooming
+	v->view_x = w->saved_view_x;
+	v->view_y = w->saved_view_y;
+
 	// HACK: Prevents the redraw from failing when there is
 	// a window on top of the viewport.
 	window_bring_to_front(w);
