@@ -96,7 +96,7 @@ extern rct_viewport* g_viewport_list;
 extern rct_viewport* g_viewport_list_end;
 
 void viewport_init_all();
-void center_2d_coordinates(int x, int y, int z, int* out_x, int* out_y, rct_viewport* viewport);
+rct_xy16 center_2d_coordinates(int x, int y, int z, rct_viewport* viewport);
 void viewport_create(rct_window *w, int x, int y, int width, int height, int zoom, int center_x, int center_y, int center_z, char flags, sint16 sprite);
 void viewport_remove(rct_viewport *w);
 void viewport_update_position(rct_window *window);

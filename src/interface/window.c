@@ -1392,13 +1392,12 @@ void window_rotate_camera(rct_window *w, int direction)
 
 	RCT2_GLOBAL(RCT2_ADDRESS_CURRENT_ROTATION, uint32) = (get_current_rotation() + direction) & 3;
 
-	int new_x, new_y;
-	center_2d_coordinates(x, y, z, &new_x, &new_y, viewport);
+	rct_xy16 new_pos = center_2d_coordinates(x, y, z, viewport);
 
-	w->saved_view_x = new_x;
-	w->saved_view_y = new_y;
-	viewport->view_x = new_x;
-	viewport->view_y = new_y;
+	w->saved_view_x = new_pos.x;
+	w->saved_view_y = new_pos.y;
+	viewport->view_x = new_pos.x;
+	viewport->view_y = new_pos.y;
 
 	window_invalidate(w);
 

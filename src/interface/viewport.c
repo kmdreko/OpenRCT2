@@ -118,28 +118,22 @@ void viewport_init_all()
  * out_x : ax
  * out_y : bx
  */
-void center_2d_coordinates(int x, int y, int z, int* out_x, int* out_y, rct_viewport* viewport){
-	int start_x = x;
-
-	rct_xyz16 coord_3d = {
-		.x = x,
-		.y = y,
-		.z = z
-	};
-
-	rct_xy16 coord_2d = coordinate_3d_to_2d(&coord_3d, get_current_rotation());
+rct_xy16 center_2d_coordinates(int x, int y, int z, rct_viewport* viewport)
+{
+	rct_xy16 coord_2d = { SHRT_MIN, 0 };
+	rct_xyz16 coord_3d = { x, y, z };
 
 	// If the start location was invalid
 	// propagate the invalid location to the output.
 	// This fixes a bug that caused the game to enter an infinite loop.
-	if (start_x == (sint16)0x8000){
-		*out_x = (sint16)0x8000;
-		*out_y = 0;
-		return;
+	if (x != SHRT_MIN)
+	{
+		coord_2d = coordinate_3d_to_2d(&coord_3d, get_current_rotation());
+		coord_2d.x -= viewport->view_width / 2;
+		coord_2d.y -= viewport->view_height / 2;
 	}
 
-	*out_x = coord_2d.x - viewport->view_width / 2;
-	*out_y = coord_2d.y - viewport->view_height / 2;
+	return coord_2d;
 }
 
 void viewport_update_pointers()
@@ -211,13 +205,12 @@ void viewport_create(rct_window *w, int x, int y, int width, int height, int zoo
 		w->viewport_target_sprite = SPR_NONE;
 	}
 
-	int view_x, view_y;
-	center_2d_coordinates(center_x, center_y, center_z, &view_x, &view_y, viewport);
+	rct_xy16 view_pos = center_2d_coordinates(center_x, center_y, center_z, viewport);
 
-	w->saved_view_x = view_x;
-	w->saved_view_y = view_y;
-	viewport->view_x = view_x;
-	viewport->view_y = view_y;
+	w->saved_view_x = view_pos.x;
+	w->saved_view_y = view_pos.y;
+	viewport->view_x = view_pos.x;
+	viewport->view_y = view_pos.y;
 
 	viewport_update_pointers();
 }
@@ -621,16 +614,14 @@ void viewport_update_position(rct_window *window)
 		at_map_edge_y = 1;
 	}
 
-	if (at_map_edge_x || at_map_edge_y) {
-		// The &0xFFFF is to prevent the sign extension messing the
-		// function up.
-		int _2d_x, _2d_y;
-		center_2d_coordinates(x, y, z, &_2d_x, &_2d_y, viewport);
+	if (at_map_edge_x || at_map_edge_y)
+	{
+		rct_xy16 pos_2d = center_2d_coordinates(x, y, z, viewport);
 
 		if (at_map_edge_x)
-			window->saved_view_x = _2d_x;
+			window->saved_view_x = pos_2d.x;
 		if (at_map_edge_y)
-			window->saved_view_y = _2d_y;
+			window->saved_view_y = pos_2d.y;
 	}
 
 	x = window->saved_view_x;
@@ -678,10 +669,9 @@ void viewport_update_sprite_follow(rct_window *window)
 
 		viewport_set_underground_flag(underground, window, window->viewport);
 
-		int center_x, center_y;
-		center_2d_coordinates(sprite->unknown.x, sprite->unknown.y, sprite->unknown.z, &center_x, &center_y, window->viewport);
+		rct_xy16 center = center_2d_coordinates(sprite->unknown.x, sprite->unknown.y, sprite->unknown.z, window->viewport);
 
-		viewport_move(center_x, center_y, window, window->viewport);
+		viewport_move(center.x, center.y, window, window->viewport);
 	}
 }
 
