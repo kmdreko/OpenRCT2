@@ -590,9 +590,12 @@ void viewport_update_position(rct_window *window)
 
 	sint16 x = viewport->view_width / 2 + window->saved_view_x;
 	sint16 y = viewport->view_height / 2 + window->saved_view_y;
-	sint16 z;
+	sint16 z = 0;
 
-	sub_689174(&x, &y, &z);
+	rct_xy16 pos;
+	pos = viewport_coord_to_map_coord((int)x, (int)y, 0);
+	x = pos.x;
+	y = pos.y;
 
 	viewport_set_underground_flag(0, window, viewport);
 
@@ -621,7 +624,6 @@ void viewport_update_position(rct_window *window)
 	if (at_map_edge_x || at_map_edge_y) {
 		// The &0xFFFF is to prevent the sign extension messing the
 		// function up.
-		int z = map_element_height(x & 0xFFFF, y & 0xFFFF);
 		int _2d_x, _2d_y;
 		center_2d_coordinates(x, y, z, &_2d_x, &_2d_y, viewport);
 
