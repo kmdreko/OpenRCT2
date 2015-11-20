@@ -83,9 +83,9 @@ void window_main_open()
 	viewport_create(window, window->x, window->y, window->width, window->height, 0,0x0FFF,0x0FFF, 0, 0x1, -1);
 	window->viewport->flags |= VIEWPORT_FLAG_SOUND_ON;
 	RCT2_GLOBAL(RCT2_ADDRESS_CURRENT_ROTATION, sint32) = 0;
-	RCT2_GLOBAL(0x009E32B0, uint8) = 0;
-	RCT2_GLOBAL(0x009E32B2, uint8) = 0;
-	RCT2_GLOBAL(0x009E32B3, uint8) = 0;
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8) = 0;
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8) = 0;
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8) = 0;
 	RCT2_GLOBAL(RCT2_ADDRESS_SELECTED_PATH_TYPE, uint8) = 0;
 }
 
