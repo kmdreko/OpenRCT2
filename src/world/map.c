@@ -3449,7 +3449,7 @@ void map_invalidate_selection_rect()
 	top -= 32 + 2080;
 
 	FOR_ALL_ACTIVE_VIEWPORTS(viewport)
-		viewport_invalidate(viewport, left, top, right, bottom);
+		viewport_invalidate_rect(viewport, left, top, right, bottom);
 }
 
 /**
@@ -4322,7 +4322,7 @@ void map_invalidate_tile_under_zoom(int x, int y, int z0, int z1, int maxZoom)
 
 	FOR_ALL_ACTIVE_VIEWPORTS(viewport)
 		if (maxZoom == -1 || viewport->zoom <= maxZoom)
-			viewport_invalidate(viewport, x1, y1, x2, y2);
+			viewport_invalidate_rect(viewport, x1, y1, x2, y2);
 }
 
 /**

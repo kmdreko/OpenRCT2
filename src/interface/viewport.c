@@ -2705,10 +2705,19 @@ void get_map_coordinates_from_pos(int screenX, int screenY, int flags, sint16 *x
 	if (mapElement != NULL) *mapElement = RCT2_GLOBAL(0x9AC150, rct_map_element*);
 }
 
+void viewport_invalidate(rct_viewport* viewport)
+{
+	gfx_set_dirty_blocks(
+		viewport->x, 
+		viewport->y, 
+		viewport->x + viewport->width,
+		viewport->y + viewport->height);
+}
+
 /**
  * Left, top, right and bottom represent 2D map coordinates at zoom 0.
  */
-void viewport_invalidate(rct_viewport *viewport, int left, int top, int right, int bottom)
+void viewport_invalidate_rect(rct_viewport *viewport, int left, int top, int right, int bottom)
 {
 	int viewportLeft = viewport->view_x;
 	int viewportTop = viewport->view_y;
