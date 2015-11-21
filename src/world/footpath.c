@@ -562,9 +562,9 @@ money32 footpath_provisional_set(int type, int x, int y, int z, int slope)
 		RCT2_GLOBAL(RCT2_ADDRESS_PROVISIONAL_PATH_FLAGS, uint8) |= (1 << 1);
 
 		if (RCT2_GLOBAL(0x00F3EFA4, uint8) & 2)
-			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
+			window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
 		else
-			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, false);
+			window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_UNDERGROUND_INSIDE, false);
 
 	}
 

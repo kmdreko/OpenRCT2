@@ -530,6 +530,7 @@ void widget_invalidate_by_class(rct_windowclass cls, int widgetIndex);
 void widget_invalidate_by_number(rct_windowclass cls, rct_windownumber number, int widgetIndex);
 void window_init_scroll_widgets(rct_window *w);
 void window_update_scroll_widgets(rct_window *w);
+void window_set_viewport_flags(rct_window *w, int flag, int value);
 int window_get_scroll_data_index(rct_window *w, int widget_index);
 
 rct_window *window_bring_to_front(rct_window *w);

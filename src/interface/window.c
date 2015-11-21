@@ -1015,6 +1015,12 @@ void window_init_scroll_widgets(rct_window *w)
 	}
 }
 
+void window_set_viewport_flags(rct_window *window, int flag, int value)
+{
+	if (window != NULL)
+		viewport_set_flags(window->viewport, flag, value);
+}
+
 /**
  *
  *  rct2: 0x006EAE4E

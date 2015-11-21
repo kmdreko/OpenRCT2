@@ -164,7 +164,7 @@ rct_window *window_maze_construction_open()
 static void window_maze_construction_close(rct_window *w)
 {
 	sub_6C9627();
-	viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_ALL_INVISIBILE, false);
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_ALL_INVISIBILE, false);
 
 	map_invalidate_map_selection_tiles();
 	RCT2_GLOBAL(RCT2_ADDRESS_MAP_SELECTION_FLAGS, uint16) &= ~(1 << 1);

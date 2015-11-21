@@ -228,7 +228,7 @@ void window_footpath_open()
 static void window_footpath_close(rct_window *w)
 {
 	footpath_provisional_update();
-	viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_ALL_INVISIBILE, false);
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_ALL_INVISIBILE, false);
 	map_invalidate_map_selection_tiles();
 	RCT2_GLOBAL(RCT2_ADDRESS_MAP_SELECTION_FLAGS, uint16) &= ~2;
 	window_invalidate_by_class(WC_TOP_TOOLBAR);
@@ -866,7 +866,7 @@ static void window_footpath_construct()
 		}
 
 		if (RCT2_GLOBAL(0x00F3EFA4, uint8) & 2)
-			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
+			window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
 
 		// If we have just built an upwards slope, the next path to construct is
 		// a bit higher. Note that the z returned by footpath_get_next_path_info
