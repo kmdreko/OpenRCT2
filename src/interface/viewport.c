@@ -2519,11 +2519,7 @@ void viewport_set_visibility(uint8 mode)
 
 		switch (mode) {
 		case 0: { //Set all these flags to 0, and invalidate if any were active
-			uint16 mask = VIEWPORT_FLAG_UNDERGROUND_INSIDE | VIEWPORT_FLAG_SEETHROUGH_RIDES |
-				VIEWPORT_FLAG_SEETHROUGH_SCENERY | VIEWPORT_FLAG_INVISIBLE_SUPPORTS |
-				VIEWPORT_FLAG_LAND_HEIGHTS | VIEWPORT_FLAG_TRACK_HEIGHTS |
-				VIEWPORT_FLAG_PATH_HEIGHTS | VIEWPORT_FLAG_INVISIBLE_PEEPS |
-				VIEWPORT_FLAG_HIDE_BASE | VIEWPORT_FLAG_HIDE_VERTICAL;
+			uint16 mask = VIEWPORT_FLAG_ALL_INVISIBILE;
 
 			invalidate += edi->flags & mask;
 			edi->flags &= ~mask;
