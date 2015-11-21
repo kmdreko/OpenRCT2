@@ -2112,14 +2112,10 @@ money32 try_place_ghost_scenery(rct_xy16 map_tile, uint32 parameter_1, uint32 pa
 		mapElement = RCT2_GLOBAL(RCT2_ADDRESS_SCENERY_MAP_ELEMENT, rct_map_element*);
 		RCT2_GLOBAL(RCT2_ADDRESS_GHOST_SCENERY_Z, uint8) = mapElement->base_height;
 		RCT2_GLOBAL(RCT2_ADDRESS_SCENERY_MAP_ELEMENT_TYPE, uint8) = mapElement->type;
-		if (RCT2_GLOBAL(0x00F64F14, uint8) & (1 << 1)){
-			//Set underground on
-			viewport_set_visibility(4);
-		}
-		else{
-			//Set underground off
-			viewport_set_visibility(5);
-		}
+		if (RCT2_GLOBAL(0x00F64F14, uint8) & (1 << 1))
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
+		else
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, false);
 
 		RCT2_GLOBAL(RCT2_ADDRESS_GHOST_SCENERY_TYPE, uint8) |= (1 << 0);
 		break;
@@ -2199,14 +2195,10 @@ money32 try_place_ghost_scenery(rct_xy16 map_tile, uint32 parameter_1, uint32 pa
 		mapElement = RCT2_GLOBAL(RCT2_ADDRESS_SCENERY_MAP_ELEMENT, rct_map_element*);
 		RCT2_GLOBAL(RCT2_ADDRESS_GHOST_SCENERY_Z, uint8) = mapElement->base_height;
 
-		if (RCT2_GLOBAL(0x00F64F14, uint8) & (1 << 1)){
-			//Set underground on
-			viewport_set_visibility(4);
-		}
-		else{
-			//Set underground off
-			viewport_set_visibility(5);
-		}
+		if (RCT2_GLOBAL(0x00F64F14, uint8) & (1 << 1))
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
+		else
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, false);
 
 		RCT2_GLOBAL(RCT2_ADDRESS_GHOST_SCENERY_TYPE, uint8) |= (1 << 3);
 		break;

@@ -2391,6 +2391,26 @@ rct_xy16 viewport_coord_to_map_coord(int x, int y, int z)
 	return ret;
 }
 
+void viewport_set_visibility(rct_viewport* viewport, int flag, int show)
+{
+	if (!viewport)
+		return;
+
+	if (show) {
+		if (!(viewport->flags & flag)) {
+			viewport->flags |= flag;
+			viewport_invalidate(viewport);
+		}
+	}
+	else {
+		if (viewport->flags & flag) {
+			viewport->flags &= ~flag;
+			viewport_invalidate(viewport);
+		}
+	}
+
+}
+
 /**
  *
  *  rct2: 0x00664689
@@ -2509,7 +2529,7 @@ void hide_construction_rights()
  *
  * rct2: 0x006CB70A
  */
-void viewport_set_visibility(uint8 mode)
+void viewport_set_visibility_mode(uint8 mode)
 {
 	rct_window* window = window_get_main();
 

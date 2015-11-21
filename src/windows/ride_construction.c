@@ -569,7 +569,7 @@ static void window_ride_construction_close(rct_window *w)
 	rct_xy_element mapElement;
 
 	sub_6C9627();
-	viewport_set_visibility(0);
+	viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_ALL_INVISIBILE, false);
 
 	map_invalidate_map_selection_tiles();
 	RCT2_GLOBAL(RCT2_ADDRESS_MAP_SELECTION_FLAGS, uint16) &= ~(1 << 1);
@@ -1596,16 +1596,15 @@ static void window_ride_construction_construct(rct_window *w)
 
 	audio_play_sound_at_location(SOUND_PLACE_ITEM, x, y, z);
 
-	if (RCT2_GLOBAL(RCT2_ADDRESS_ABOVE_GROUND_FLAGS, uint8) & TRACK_ELEMENT_LOCATION_IS_UNDERGROUND) {
-		viewport_set_visibility(1);
-	}
+	if (RCT2_GLOBAL(RCT2_ADDRESS_ABOVE_GROUND_FLAGS, uint8) & TRACK_ELEMENT_LOCATION_IS_UNDERGROUND)
+		viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
 
 	if (
 		(_currentTrackCurve >= 343 && _currentTrackCurve <= 350) ||
 		(_currentTrackCurve >= 358 && _currentTrackCurve <= 365) ||
 		(_currentTrackSlopeEnd != TRACK_SLOPE_NONE)
 	) {
-		viewport_set_visibility(2);
+		viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_TRACK_HEIGHTS, true);
 	}
 
 	// ***************
@@ -2427,9 +2426,12 @@ money32 sub_6CA162(int rideIndex, int trackType, int trackDirection, int edxRS16
 		RCT2_GLOBAL(0x00F440C9, uint16) = z;
 		RCT2_GLOBAL(0x00F440CB, uint8) = trackDirection;
 		_currentTrackSelectionFlags |= 2;
-		viewport_set_visibility(RCT2_GLOBAL(RCT2_ADDRESS_ABOVE_GROUND_FLAGS, uint8) & TRACK_ELEMENT_LOCATION_IS_UNDERGROUND ? 1 : 3);
+		if (RCT2_GLOBAL(RCT2_ADDRESS_ABOVE_GROUND_FLAGS, uint8) & TRACK_ELEMENT_LOCATION_IS_UNDERGROUND)
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
+		else
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, false);
 		if (_currentTrackSlopeEnd != 0)
-			viewport_set_visibility(2);
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_TRACK_HEIGHTS, true);
 
 		return result;
 	} else {
@@ -2446,9 +2448,12 @@ money32 sub_6CA162(int rideIndex, int trackType, int trackDirection, int edxRS16
 		RCT2_GLOBAL(0x00F440C9, uint16) = z;
 		RCT2_GLOBAL(0x00F440CB, uint8) = trackDirection;
 		_currentTrackSelectionFlags |= 2;
-		viewport_set_visibility(RCT2_GLOBAL(RCT2_ADDRESS_ABOVE_GROUND_FLAGS, uint8) & TRACK_ELEMENT_LOCATION_IS_UNDERGROUND ? 1 : 3);
+		if (RCT2_GLOBAL(RCT2_ADDRESS_ABOVE_GROUND_FLAGS, uint8) & TRACK_ELEMENT_LOCATION_IS_UNDERGROUND)
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, true);
+		else
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, false);
 		if (_currentTrackSlopeEnd != 0)
-			viewport_set_visibility(2);
+			viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_TRACK_HEIGHTS, true);
 
 		return result;
 	}

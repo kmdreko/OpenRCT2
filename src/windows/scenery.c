@@ -506,7 +506,7 @@ void window_scenery_close(rct_window *w)
 {
 	scenery_remove_ghost_tool_placement();
 	hide_gridlines();
-	viewport_set_visibility(0);
+	viewport_set_visibility(window_get_main()->viewport, VIEWPORT_FLAG_ALL_INVISIBILE, false);
 
 	if (window_scenery_is_scenery_tool_active())
 		tool_cancel();
