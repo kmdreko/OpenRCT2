@@ -548,21 +548,7 @@ void viewport_move(sint16 x, sint16 y, rct_window* window, rct_viewport* viewpor
 void viewport_set_underground_flag(int underground, rct_window* window, rct_viewport* viewport)
 {
 	if (window->classification != WC_MAIN_WINDOW)
-	{
-		if (!underground)
-		{
-			int bit = viewport->flags & VIEWPORT_FLAG_UNDERGROUND_INSIDE;
-			viewport->flags &= ~VIEWPORT_FLAG_UNDERGROUND_INSIDE;
-			if (!bit) return;
-		}
-		else
-		{
-			int bit = viewport->flags & VIEWPORT_FLAG_UNDERGROUND_INSIDE;
-			viewport->flags |= VIEWPORT_FLAG_UNDERGROUND_INSIDE;
-			if (bit) return;
-		}
-		window_invalidate(window);
-	}
+		viewport_set_flags(viewport, VIEWPORT_FLAG_UNDERGROUND_INSIDE, underground);
 }
 
 /**
@@ -2417,17 +2403,8 @@ void viewport_set_flags(rct_viewport* viewport, int flag, int value)
  */
 void show_gridlines()
 {
-	rct_window *mainWindow;
-
-	if (RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8) == 0) {
-		if ((mainWindow = window_get_main()) != NULL) {
-			if (!(mainWindow->viewport->flags & VIEWPORT_FLAG_GRIDLINES)) {
-				mainWindow->viewport->flags |= VIEWPORT_FLAG_GRIDLINES;
-				window_invalidate(mainWindow);
-			}
-		}
-	}
-	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8)++;
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_GRIDLINES, true);
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8) = true;
 }
 
 /**
@@ -2436,17 +2413,11 @@ void show_gridlines()
  */
 void hide_gridlines()
 {
-	rct_window *mainWindow;
+	if (gConfigGeneral.always_show_gridlines)
+		return;
 
-	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8)--;
-	if (RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8) == 0) {
-		if ((mainWindow = window_get_main()) != NULL) {
-			if (!gConfigGeneral.always_show_gridlines) {
-				mainWindow->viewport->flags &= ~VIEWPORT_FLAG_GRIDLINES;
-				window_invalidate(mainWindow);
-			}
-		}
-	}
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_GRIDLINES, false);
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_GRIDLINES, uint8) = false;
 }
 
 /**
@@ -2455,17 +2426,8 @@ void hide_gridlines()
  */
 void show_land_rights()
 {
-	rct_window *mainWindow;
-
-	if (RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8) == 0) {
-		if ((mainWindow = window_get_main()) != NULL) {
-			if (!(mainWindow->viewport->flags & VIEWPORT_FLAG_LAND_OWNERSHIP)) {
-				mainWindow->viewport->flags |= VIEWPORT_FLAG_LAND_OWNERSHIP;
-				window_invalidate(mainWindow);
-			}
-		}
-	}
-	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8)++;
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_LAND_OWNERSHIP, true);
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8) = true;
 }
 
 /**
@@ -2474,17 +2436,8 @@ void show_land_rights()
  */
 void hide_land_rights()
 {
-	rct_window *mainWindow;
-
-	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8)--;
-	if (RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8) == 0) {
-		if ((mainWindow = window_get_main()) != NULL) {
-			if (mainWindow->viewport->flags & VIEWPORT_FLAG_LAND_OWNERSHIP) {
-				mainWindow->viewport->flags &= ~VIEWPORT_FLAG_LAND_OWNERSHIP;
-				window_invalidate(mainWindow);
-			}
-		}
-	}
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_LAND_OWNERSHIP, false);
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_LAND_RIGHTS, uint8) = false;
 }
 
 /**
@@ -2493,17 +2446,8 @@ void hide_land_rights()
  */
 void show_construction_rights()
 {
-	rct_window *mainWindow;
-
-	if (RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8) == 0) {
-		if ((mainWindow = window_get_main()) != NULL) {
-			if (!(mainWindow->viewport->flags & VIEWPORT_FLAG_CONSTRUCTION_RIGHTS)) {
-				mainWindow->viewport->flags |= VIEWPORT_FLAG_CONSTRUCTION_RIGHTS;
-				window_invalidate(mainWindow);
-			}
-		}
-	}
-	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8)++;
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_CONSTRUCTION_RIGHTS, true);
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8) = true;
 }
 
 /**
@@ -2512,17 +2456,8 @@ void show_construction_rights()
  */
 void hide_construction_rights()
 {
-	rct_window *mainWindow;
-
-	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8)--;
-	if (RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8) == 0) {
-		if ((mainWindow = window_get_main()) != NULL) {
-			if (mainWindow->viewport->flags & VIEWPORT_FLAG_CONSTRUCTION_RIGHTS) {
-				mainWindow->viewport->flags &= ~VIEWPORT_FLAG_CONSTRUCTION_RIGHTS;
-				window_invalidate(mainWindow);
-			}
-		}
-	}
+	window_set_viewport_flags(window_get_main(), VIEWPORT_FLAG_CONSTRUCTION_RIGHTS, false);
+	RCT2_GLOBAL(RCT2_ADDRESS_SHOW_CONSTRUCTION_RIGHTS, uint8) = false;
 }
 
 /**
