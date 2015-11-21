@@ -574,8 +574,6 @@ void viewport_update_position(rct_window *window)
 	x = pos.x;
 	y = pos.y;
 
-	viewport_set_underground_flag(0, window, viewport);
-
 	//Clamp to the map minimum value
 	int at_map_edge_x = 0;
 	if (x < MAP_MINIMUM_X_Y){
