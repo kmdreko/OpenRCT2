@@ -128,7 +128,7 @@ void show_land_rights();
 void hide_land_rights();
 void show_construction_rights();
 void hide_construction_rights();
-void viewport_set_visibility(rct_viewport *viewport, int flag, int show);
+void viewport_set_flags(rct_viewport *viewport, int flag, int show);
 void viewport_set_visibility_mode(uint8 mode);
 
 void get_map_coordinates_from_pos(int screenX, int screenY, int flags, sint16 *x, sint16 *y, int *interactionType, rct_map_element **mapElement, rct_viewport **viewport);
